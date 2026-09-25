@@ -36,13 +36,15 @@ repositories {
 }
 
 dependencies {
-    // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-//    mappings loom.officialMojangMappings()
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    // Shared platform-agnostic code (config model + JSON manager).
+    // 'implementation' puts it on the compile/runtime classpath; 'include' bundles it
+    // inside the produced mod jar via Fabric's jar-in-jar mechanism.
+//    implementation project(':common')
+//    include project(':common')
 }
 
 processResources {
