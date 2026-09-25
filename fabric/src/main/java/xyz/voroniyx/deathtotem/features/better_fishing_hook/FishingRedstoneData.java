@@ -3,8 +3,10 @@ package xyz.voroniyx.deathtotem.features.better_fishing_hook;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 import xyz.voroniyx.deathtotem.DeathTotemMod;
@@ -18,15 +20,18 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 public class FishingRedstoneData extends SavedData {
 
     public static class TargetState {
+        public final ResourceKey<Level> dimension;
         public final BlockPos pos;
         public boolean isArmed;
 
-        public TargetState(BlockPos pos, boolean isArmed) {
+        public TargetState(ResourceKey<Level> dimension, BlockPos pos, boolean isArmed) {
+            this.dimension = dimension;
             this.pos = pos;
             this.isArmed = isArmed;
         }
 
         public static final Codec<TargetState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(ts -> ts.dimension),
                 BlockPos.CODEC.fieldOf("pos").forGetter(ts -> ts.pos),
                 Codec.BOOL.fieldOf("isArmed").forGetter(ts -> ts.isArmed)
         ).apply(instance, TargetState::new));
@@ -54,12 +59,12 @@ public class FishingRedstoneData extends SavedData {
         this.activeTargets = new HashMap<>(map);
     }
 
-    public static FishingRedstoneData getServerState(ServerLevel world) {
-        return world.getServer().overworld().getDataStorage().computeIfAbsent(TYPE);
+    public static FishingRedstoneData getServerState(MinecraftServer server) {
+        return server.overworld().getDataStorage().computeIfAbsent(TYPE);
     }
 
-    public void setTarget(UUID playerUuid, BlockPos pos) {
-        activeTargets.put(playerUuid, new TargetState(pos, false));
+    public void setTarget(UUID playerUuid, ResourceKey<Level> dimension, BlockPos pos) {
+        activeTargets.put(playerUuid, new TargetState(dimension, pos, false));
         setDirty();
     }
 

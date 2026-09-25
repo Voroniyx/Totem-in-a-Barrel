@@ -50,6 +50,8 @@ takes <code>1</code> damage, and the link between the block and the rod is broke
 This can be used to create fishing rod stasis chambers directly in your base without using a Nether portal or unloaded chunks.
 The connection remains active even between reconnections and server restarts.
 
+The link works across dimensions: the target block can be in a different dimension than the one you're in when you trigger it, including custom dimensions added by other mods or datapacks.
+
 </details>
 
 ## Unstable SMP / Origin

@@ -41,8 +41,8 @@ public class FishingHookMixin {
             ServerLevel world = (ServerLevel) bobber.level();
 
             if (world.getBlockState(pos).is(Blocks.TARGET)) {
-                FishingRedstoneData data = FishingRedstoneData.getServerState(world);
-                data.setTarget(player.getUUID(), pos);
+                FishingRedstoneData data = FishingRedstoneData.getServerState(world.getServer());
+                data.setTarget(player.getUUID(), world.dimension(), pos);
 
                 ItemStack mainHand = player.getItemInHand(InteractionHand.MAIN_HAND);
                 if (mainHand.is(net.minecraft.world.item.Items.FISHING_ROD)) {
@@ -63,7 +63,7 @@ public class FishingHookMixin {
 
         if (owner instanceof Player player && !bobber.level().isClientSide()) {
             ServerLevel world = (ServerLevel) bobber.level();
-            FishingRedstoneData data = FishingRedstoneData.getServerState(world);
+            FishingRedstoneData data = FishingRedstoneData.getServerState(world.getServer());
             FishingRedstoneData.TargetState targetState = data.getTarget(player.getUUID());
 
             if (targetState != null) {
@@ -72,7 +72,8 @@ public class FishingHookMixin {
                     data.markArmed(player.getUUID());
 
                     BlockPos pos = targetState.pos;
-                    Component targetLine = Component.literal("Target: X: " + pos.getX() + " Y: " + pos.getY() + " Z: " + pos.getZ());
+                    Component targetLine = Component.literal("Target: " + targetState.dimension.identifier()
+                            + " X: " + pos.getX() + " Y: " + pos.getY() + " Z: " + pos.getZ());
 
                     ItemLore lore = new ItemLore(List.of(targetLine));
                     rod.set(DataComponents.LORE, lore);
@@ -80,14 +81,15 @@ public class FishingHookMixin {
                 // Trigger
                 else {
                     BlockPos targetPos = targetState.pos;
+                    ServerLevel targetWorld = world.getServer().getLevel(targetState.dimension);
 
-                    if (world.getBlockState(targetPos).is(Blocks.TARGET)) {
-                        world.setBlock(targetPos, Blocks.TARGET.defaultBlockState().setValue(BlockStateProperties.POWER, 15), 3);
-                        world.getBlockTicks().schedule(
+                    if (targetWorld != null && targetWorld.getBlockState(targetPos).is(Blocks.TARGET)) {
+                        targetWorld.setBlock(targetPos, Blocks.TARGET.defaultBlockState().setValue(BlockStateProperties.POWER, 15), 3);
+                        targetWorld.getBlockTicks().schedule(
                                 new ScheduledTick<>(
                                         Blocks.TARGET,
                                         targetPos,
-                                        world.getGameTime() + 20,
+                                        targetWorld.getGameTime() + 20,
                                         TickPriority.NORMAL,
                                         0
                                 )
