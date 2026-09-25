@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version "${shadow_version}"
+    id 'xyz.jpenilla.run-paper' version "${run_paper_version}"
+}
+
+base {
+    // Distinguishes the plugin jar from the Fabric mod jar in CI artifacts.
+    archivesName = "${project.archives_base_name}-paper"
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'PaperMC'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+}
+
+dependencies {
+    // Paper API (Mojang-mapped since 26.1) provided by the server at runtime.
+    compileOnly "io.papermc.paper:paper-api:${project.paper_version}"
+
+    // Shared platform-agnostic code, shaded into the plugin jar (see shadowJar below).
+    implementation project(':common')
+}
+
+processResources {
+    def props = [version: project.version, apiVersion: project.paper_api_version]
+    inputs.properties(props)
+    filteringCharset 'UTF-8'
+
+    filesMatching('paper-plugin.yml') {
+        expand props
+    }
+}
+
+// The plain jar is only an input to shadowJar; the shaded jar is the real plugin.
+tasks.named('jar') {
+    archiveClassifier.set('dev')
+}
+
+tasks.named('shadowJar') {
+    archiveClassifier.set('')
+}
+
+tasks.named('build') {
+    dependsOn(tasks.named('shadowJar'))
+}
+
+tasks.named('runServer') {
+    minecraftVersion('26.3')
+}

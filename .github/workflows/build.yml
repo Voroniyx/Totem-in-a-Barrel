@@ -1,34 +1,47 @@
-name: Build Fabric Mod
+name: Build
+
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
 
 jobs:
   build:
+    name: Build Fabric mod & Paper plugin
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '25'
 
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
-      - name: Build mod
-        run: ./gradlew build
+      - name: Build all platforms
+        run: ./gradlew build --stacktrace
 
-      - name: Upload mod artifact
+      - name: Upload Fabric mod
         uses: actions/upload-artifact@v4
         with:
           name: fabric-mod
-          path: build/libs/*.jar
+          path: |
+            fabric/build/libs/*.jar
+            !fabric/build/libs/*-sources.jar
+          if-no-files-found: error
+
+      - name: Upload Paper plugin
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-plugin
+          path: |
+            paper/build/libs/*.jar
+            !paper/build/libs/*-dev.jar
+          if-no-files-found: error

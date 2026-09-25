@@ -1,0 +1,12 @@
+name: TotemInABarrel
+version: '${version}'
+main: xyz.voroniyx.deathtotem.paper.DeathTotemPlugin
+api-version: '${apiVersion}'
+description: "Totem stasis: teleport-on-totem-pop by consuming a named totem stored in a barrel."
+authors:
+  - Voroniyx
+website: https://modrinth.com/mod/totem-in-barrel
+permissions:
+  deathtotemmod.command:
+    description: Allows use of the /tiab configuration command.
+    default: op

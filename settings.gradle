@@ -4,6 +4,16 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
+        maven {
+            name = 'PaperMC'
+            url = 'https://repo.papermc.io/repository/maven-public/'
+        }
         gradlePluginPortal()
     }
 }
+
+rootProject.name = 'DeathTotem'
+
+include 'common'
+include 'fabric'
+include 'paper'

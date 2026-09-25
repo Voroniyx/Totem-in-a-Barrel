@@ -1,0 +1,9 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    // Gson is provided at runtime by both the Fabric (Minecraft) and Paper platforms,
+    // so it is only needed on the compile classpath here and is never bundled.
+    compileOnly "com.google.code.gson:gson:${project.gson_version}"
+}

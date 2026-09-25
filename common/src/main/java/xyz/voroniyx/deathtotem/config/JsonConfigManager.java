@@ -25,9 +25,23 @@ public class JsonConfigManager<T> {
     public void save() throws IOException {
         if (data == null) return;
 
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
+        }
+
         try (Writer writer = new FileWriter(file)) {
             gson.toJson(data, writer);
         }
+    }
+
+    public boolean saveSave() {
+        try {
+            save();
+        }catch (Exception ex) {
+            return false;
+        }
+        return true;
     }
 
     public void load() throws IOException {
@@ -46,5 +60,4 @@ public class JsonConfigManager<T> {
     }
 
     public T getData() { return data; }
-    public void setData(T data) { this.data = data; }
 }
