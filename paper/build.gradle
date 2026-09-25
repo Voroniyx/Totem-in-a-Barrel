@@ -49,5 +49,5 @@ tasks.named('build') {
 }
 
 tasks.named('runServer') {
-    minecraftVersion('26.2')
+    minecraftVersion('26.3')
 }
