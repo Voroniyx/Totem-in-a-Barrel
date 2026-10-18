@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import xyz.voroniyx.deathtotem.commands.ConfigCommand;
 import xyz.voroniyx.deathtotem.config.JsonConfigManager;
 import xyz.voroniyx.deathtotem.config.ModConfig;
+import xyz.voroniyx.deathtotem.features.MarkedBarrelGhostTotems;
 
 import java.io.IOException;
 
@@ -24,6 +25,7 @@ public class DeathTotemMod implements ModInitializer {
         LOGGER.info("DeathTotemMod Initializing");
 
         loadConfig();
+        MarkedBarrelGhostTotems.init(CONFIG.getData());
 
         registerCommands();
     }
