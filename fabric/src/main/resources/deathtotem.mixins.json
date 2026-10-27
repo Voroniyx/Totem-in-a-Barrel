@@ -4,9 +4,13 @@
   "package": "xyz.voroniyx.deathtotem.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AbstractContainerMenuMixin",
     "ChunkMapMixin",
     "FishingHookMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ItemEntityMixin",
+    "LivingEntityMixin",
+    "RandomizableContainerBlockEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

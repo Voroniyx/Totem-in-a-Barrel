@@ -21,15 +21,19 @@ Default config:
 {
   "EnableTotemConsume": true,
   "TotemConsumeOnlyWhenLastTotemUsed": true,
-  "ExperimentalEnableBetterFishingHookFeature": false
+  "ExperimentalEnableBetterFishingHookFeature": false,
+  "EnableExperimentalMarkedBarrels": false,
+  "ExperimentalMarkerBlock": "minecraft:crying_obsidian"
 }
 ```
-| Variable                                   | Default value | Available in     | Description                                                                                                                                                      |
-|--------------------------------------------|---------------|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| EnableTotemConsume                         | true          | Global, Override | When `true` enables the mod                                                                                                                                      |
-| TotemConsumeOnlyWhenLastTotemUsed          | true          | Global, Override | When `true`, the totem in the barrel will only be consumed when the players last totem poped                                                                     |
-| NameOfTriggeringTotem                      | *unset*       | Override         | When set, the barrel totem is only consumed if the totem that popped is named this. Matching ignores casing and surrounding spaces. Unset means any totem counts |
-| ExperimentalEnableBetterFishingHookFeature | false         | Global           | **Experimental, Fabric only.** When `true`, a fishing rod can be linked to a target block and remotly trigger a redstone signal                                  |
+| Variable                                   | Default value               | Available in     | Description                                                                                                                                                      |
+|--------------------------------------------|-----------------------------|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| EnableTotemConsume                         | true                        | Global, Override | When `true` enables the mod                                                                                                                                      |
+| TotemConsumeOnlyWhenLastTotemUsed          | true                        | Global, Override | When `true`, the totem in the barrel will only be consumed when the players last totem poped                                                                     |
+| NameOfTriggeringTotem                      | *unset*                     | Override         | When set, the barrel totem is only consumed if the totem that popped is named this. Matching ignores casing and surrounding spaces. Unset means any totem counts |
+| ExperimentalEnableBetterFishingHookFeature | false                       | Global           | **Experimental, Fabric only.** When `true`, a fishing rod can be linked to a target block and remotly trigger a redstone signal                                  |
+| EnableExperimentalMarkedBarrels            | false                       | Global           | **Experimental.** When `true`, barrels with the marker block below them are marked and mimic the original glitch (requires a server restart)                     |
+| ExperimentalMarkerBlock                    | `minecraft:crying_obsidian` | Global           | **Experimental.** The block that has to be directly below a barrel to mark it                                                                                    |
 
 ## Optional Features
 These features are completely optional and are disabled by default
@@ -54,6 +58,26 @@ The link is stored on the rod itself, so a player can own several rods with diff
 The connection remains active even between reconnections and server restarts.
 
 The link works across dimensions: the target block can be in a different dimension than the one you're in when you trigger it, including custom dimensions added by other mods or datapacks.
+
+</details>
+
+<details>
+<summary>Marked barrels (experimental)</summary>
+<b>This feature is experimental. It may change or be removed in future versions.</b>
+
+Mimics the original glitch without needing a second totem. This can only be enabled in the config file and requires a server restart.
+
+```json
+{
+  "EnableExperimentalMarkedBarrels": true,
+  "ExperimentalMarkerBlock": "minecraft:crying_obsidian"
+}
+```
+
+- A barrel is **marked** when the block directly below it is the marker block (`ExperimentalMarkerBlock`).
+- When a player puts a totem into a marked barrel (click, shift-click or number key), the action is cancelled: the player keeps their totem and the barrel receives a totem named after the player instead. The normal totem pop logic then consumes it.
+- Taking a totem out of a marked barrel makes it vanish.
+- The generated totems are tagged, so they always vanish when they leave a barrel (menu, hopper, broken barrel). This prevents duplicating totems.
 
 </details>
 

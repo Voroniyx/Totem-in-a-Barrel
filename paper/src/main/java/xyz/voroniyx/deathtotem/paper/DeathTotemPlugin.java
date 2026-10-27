@@ -21,6 +21,7 @@ public class DeathTotemPlugin extends JavaPlugin {
         registerCommands();
 
         getServer().getPluginManager().registerEvents(new TotemResurrectListener(this), this);
+        getServer().getPluginManager().registerEvents(new MarkedBarrelListener(this), this);
     }
 
     private void loadConfig() {
