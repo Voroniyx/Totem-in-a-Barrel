@@ -1,0 +1,76 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Before you submit:** remove all sensitive information from anything you share here (IP addresses, usernames, player UUIDs, access tokens, server paths, coordinates of private bases). Everything in an issue is public.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Put a totem in a barrel
+        2. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Fabric
+        - Paper
+    validations:
+      required: true
+  - type: input
+    id: mc-version
+    attributes:
+      label: Minecraft version
+      placeholder: "26.3"
+    validations:
+      required: true
+  - type: input
+    id: mod-version
+    attributes:
+      label: Mod / plugin version
+      placeholder: "1.8.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: feature
+    attributes:
+      label: Affected feature
+      options:
+        - Totem in a barrel (core)
+        - Config / commands / player overrides
+        - Experimental - Better fishing hook (Fabric only)
+        - Experimental - Marked barrels
+        - Other / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Config
+      description: Contents of `death_totem.json`. Remove player UUIDs and other sensitive information first.
+      render: json
+  - type: input
+    id: logs
+    attributes:
+      label: Link to logs / crash report
+      description: Upload `latest.log` or the crash report to a paste service (e.g. https://mclo.gs) and paste the link here. Remove sensitive information first, or use a service that censors it automatically.
+      placeholder: https://mclo.gs/...
+  - type: input
+    id: other-mods
+    attributes:
+      label: Link to your mod / plugin list
+      description: A link to your modpack, Modrinth profile or a paste of your mod list. Relevant are mods or plugins touching totems, barrels or fishing rods, and protection plugins.
