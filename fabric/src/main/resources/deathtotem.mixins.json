@@ -6,6 +6,8 @@
   "mixins": [
     "AbstractContainerMenuMixin",
     "ChunkMapMixin",
+    "FishingHookMixin",
+    "LivingEntityMixin",
     "ItemEntityMixin",
     "LivingEntityMixin",
     "RandomizableContainerBlockEntityMixin"

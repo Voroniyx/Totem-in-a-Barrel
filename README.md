@@ -20,14 +20,42 @@ Default config:
 ```json
 {
   "EnableTotemConsume": true,
-  "TotemConsumeOnlyWhenLastTotemUsed": true
+  "TotemConsumeOnlyWhenLastTotemUsed": true,
+  "ExperimentalEnableBetterFishingHookFeature": false
 }
 ```
-| Variable | Default value | Available in | Description |
-|---|---|---|---|
-| EnableTotemConsume | true | Global, Override | When `true` enables the mod |
-| TotemConsumeOnlyWhenLastTotemUsed | true | Global, Override | When `true`, the totem in the barrel will only be consumed when the players last totem poped |
-| NameOfTriggeringTotem | *unset* | Override | When set, the barrel totem is only consumed if the totem that popped is named this. Matching ignores casing and surrounding spaces. Unset means any totem counts |
+| Variable                                   | Default value | Available in     | Description                                                                                                                                                      |
+|--------------------------------------------|---------------|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| EnableTotemConsume                         | true          | Global, Override | When `true` enables the mod                                                                                                                                      |
+| TotemConsumeOnlyWhenLastTotemUsed          | true          | Global, Override | When `true`, the totem in the barrel will only be consumed when the players last totem poped                                                                     |
+| NameOfTriggeringTotem                      | *unset*       | Override         | When set, the barrel totem is only consumed if the totem that popped is named this. Matching ignores casing and surrounding spaces. Unset means any totem counts |
+| ExperimentalEnableBetterFishingHookFeature | false         | Global           | **Experimental, Fabric only.** When `true`, a fishing rod can be linked to a target block and remotly trigger a redstone signal                                  |
+
+## Optional Features
+These features are completely optional and are disabled by default
+
+<details>
+<summary>Better fishing hook (experimental, Fabric only)</summary>
+<b>This feature is experimental and only available on Fabric (not on Paper). It may change or be removed in future versions, and its config key may be renamed.</b>
+
+This feature can not be enabled through the in-game config commands.
+
+<b>This feature can be used not only for stasis chambers but also for any other Redstone contraption, which may be game-breaking for some players</b>
+
+If <code>ExperimentalEnableBetterFishingHookFeature</code> is set to <code>true</code> in the configuration file, a fishing rod can be used on a target block. 
+
+This fishing rod is then *linked* to the target block. This is indicated by the target block's position being listed in the fishing rod's lore.
+
+If the fishing rod is used again, the linked target block emits a Redstone signal with a strength of <code>15</code>, the fishing rod 
+takes <code>1</code> damage, and the link between the block and the rod is broken and must be reestablished.
+
+This can be used to create fishing rod stasis chambers directly in your base without using a Nether portal or unloaded chunks.
+The link is stored on the rod itself, so a player can own several rods with different targets, and rods can be given to other players.
+The connection remains active even between reconnections and server restarts.
+
+The link works across dimensions: the target block can be in a different dimension than the one you're in when you trigger it, including custom dimensions added by other mods or datapacks.
+
+</details>
 
 ## Experimental: Marked Barrels
 Mimics the original glitch without needing a second totem. This can only be enabled in the config file and requires a server restart.
