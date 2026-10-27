@@ -48,6 +48,7 @@ If the fishing rod is used again, the linked target block emits a Redstone signa
 takes <code>1</code> damage, and the link between the block and the rod is broken and must be reestablished.
 
 This can be used to create fishing rod stasis chambers directly in your base without using a Nether portal or unloaded chunks.
+The link is stored on the rod itself, so a player can own several rods with different targets, and rods can be given to other players.
 The connection remains active even between reconnections and server restarts.
 
 The link works across dimensions: the target block can be in a different dimension than the one you're in when you trigger it, including custom dimensions added by other mods or datapacks.

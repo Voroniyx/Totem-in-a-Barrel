@@ -6,10 +6,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.voroniyx.deathtotem.DeathTotemMod;
-import xyz.voroniyx.deathtotem.features.better_fishing_hook.FishingRedstoneData;
+import xyz.voroniyx.deathtotem.features.better_fishing_hook.FishingRodLink;
 
 import java.util.List;
 
@@ -41,12 +41,12 @@ public class FishingHookMixin {
             ServerLevel world = (ServerLevel) bobber.level();
 
             if (world.getBlockState(pos).is(Blocks.TARGET)) {
-                FishingRedstoneData data = FishingRedstoneData.getServerState(world.getServer());
-                data.setTarget(player.getUUID(), world.dimension(), pos);
-
-                ItemStack mainHand = player.getItemInHand(InteractionHand.MAIN_HAND);
-                if (mainHand.is(net.minecraft.world.item.Items.FISHING_ROD)) {
-                    mainHand.remove(DataComponents.LORE);
+                ItemStack rod = player.getMainHandItem().is(Items.FISHING_ROD)
+                        ? player.getMainHandItem()
+                        : player.getOffhandItem();
+                if (rod.is(Items.FISHING_ROD)) {
+                    FishingRodLink.set(rod, new FishingRodLink(world.dimension(), pos, false));
+                    rod.remove(DataComponents.LORE);
                 }
             }
         }
@@ -59,57 +59,52 @@ public class FishingHookMixin {
         }
 
         FishingHook bobber = (FishingHook) (Object) this;
-        Entity owner = bobber.getOwner();
 
-        if (owner instanceof Player player && !bobber.level().isClientSide()) {
+        if (bobber.getOwner() instanceof Player player && !bobber.level().isClientSide()) {
             ServerLevel world = (ServerLevel) bobber.level();
-            FishingRedstoneData data = FishingRedstoneData.getServerState(world.getServer());
-            FishingRedstoneData.TargetState targetState = data.getTarget(player.getUUID());
+            FishingRodLink link = FishingRodLink.get(rod).orElse(null);
 
-            if (targetState != null) {
-                // Arming it
-                if (!targetState.isArmed) {
-                    data.markArmed(player.getUUID());
+            if (link == null) {
+                return;
+            }
 
-                    BlockPos pos = targetState.pos;
-                    Component targetLine = Component.literal("Target: " + targetState.dimension.identifier()
-                            + " X: " + pos.getX() + " Y: " + pos.getY() + " Z: " + pos.getZ());
+            // Arming it
+            if (!link.isArmed()) {
+                FishingRodLink.set(rod, link.armed());
 
-                    ItemLore lore = new ItemLore(List.of(targetLine));
-                    rod.set(DataComponents.LORE, lore);
-                }
-                // Trigger
-                else {
-                    BlockPos targetPos = targetState.pos;
-                    ServerLevel targetWorld = world.getServer().getLevel(targetState.dimension);
+                BlockPos pos = link.pos();
+                Component targetLine = Component.literal("Target: " + link.dimension().identifier()
+                        + " X: " + pos.getX() + " Y: " + pos.getY() + " Z: " + pos.getZ());
+                rod.set(DataComponents.LORE, new ItemLore(List.of(targetLine)));
+            }
+            // Trigger
+            else {
+                BlockPos targetPos = link.pos();
+                ServerLevel targetWorld = world.getServer().getLevel(link.dimension());
 
-                    if (targetWorld != null && targetWorld.getBlockState(targetPos).is(Blocks.TARGET)) {
-                        targetWorld.setBlock(targetPos, Blocks.TARGET.defaultBlockState().setValue(BlockStateProperties.POWER, 15), 3);
-                        targetWorld.getBlockTicks().schedule(
-                                new ScheduledTick<>(
-                                        Blocks.TARGET,
-                                        targetPos,
-                                        targetWorld.getGameTime() + 20,
-                                        TickPriority.NORMAL,
-                                        0
-                                )
-                        );
-                    }
-
-                    InteractionHand activeHand = player.getUsedItemHand();
-                    rod.hurtAndBreak(
-                            1,
-                            world,
-                            player instanceof ServerPlayer sp ?
-                                    sp
-                                    : null,
-                            (item) -> player.onEquippedItemBroken(item, activeHand.asEquipmentSlot())
+                if (targetWorld != null && targetWorld.getBlockState(targetPos).is(Blocks.TARGET)) {
+                    targetWorld.setBlock(targetPos, Blocks.TARGET.defaultBlockState().setValue(BlockStateProperties.POWER, 15), 3);
+                    targetWorld.getBlockTicks().schedule(
+                            new ScheduledTick<>(
+                                    Blocks.TARGET,
+                                    targetPos,
+                                    targetWorld.getGameTime() + 20,
+                                    TickPriority.NORMAL,
+                                    0
+                            )
                     );
-
-                    rod.remove(DataComponents.LORE);
-
-                    data.removeTarget(player.getUUID());
                 }
+
+                InteractionHand rodHand = rod == player.getOffhandItem() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+                rod.hurtAndBreak(
+                        1,
+                        world,
+                        player instanceof ServerPlayer sp ? sp : null,
+                        (item) -> player.onEquippedItemBroken(item, rodHand.asEquipmentSlot())
+                );
+
+                FishingRodLink.clear(rod);
+                rod.remove(DataComponents.LORE);
             }
         }
     }
