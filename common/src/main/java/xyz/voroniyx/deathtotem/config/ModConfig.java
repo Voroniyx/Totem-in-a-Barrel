@@ -10,6 +10,7 @@ public class ModConfig {
 
     public boolean EnableTotemConsume = true;
     public boolean TotemConsumeOnlyWhenLastTotemUsed = true;
+    public boolean ExperimentalEnableBetterFishingHookFeature = false;
     public HashSet<PlayerOverrides> PlayerOverrides;
 
     public ModConfig() {
