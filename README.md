@@ -21,26 +21,28 @@ Default config:
 {
   "EnableTotemConsume": true,
   "TotemConsumeOnlyWhenLastTotemUsed": true,
-  "EnableBetterFishingHookFeature": false
+  "ExperimentalEnableBetterFishingHookFeature": false
 }
 ```
-| Variable                          | Default value | Available in      | Description                                                                                                                                          |
-|------------------------------------|---------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| EnableTotemConsume                | true          | Global, Override   | When `true` enables the mod                                                                                                                          |
-| TotemConsumeOnlyWhenLastTotemUsed | true          | Global, Override   | When `true`, the totem in the barrel will only be consumed when the players last totem poped                                                        |
-| NameOfTriggeringTotem             | *unset*       | Override           | When set, the barrel totem is only consumed if the totem that popped is named this. Matching ignores casing and surrounding spaces. Unset means any totem counts |
-| EnableBetterFishingHookFeature    | false         | Global             | When `true`, a fishing rod can be linked to a target block and remotly trigger a redstone signal                                                    |
+| Variable                                   | Default value | Available in     | Description                                                                                                                                                      |
+|--------------------------------------------|---------------|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| EnableTotemConsume                         | true          | Global, Override | When `true` enables the mod                                                                                                                                      |
+| TotemConsumeOnlyWhenLastTotemUsed          | true          | Global, Override | When `true`, the totem in the barrel will only be consumed when the players last totem poped                                                                     |
+| NameOfTriggeringTotem                      | *unset*       | Override         | When set, the barrel totem is only consumed if the totem that popped is named this. Matching ignores casing and surrounding spaces. Unset means any totem counts |
+| ExperimentalEnableBetterFishingHookFeature | false         | Global           | **Experimental, Fabric only.** When `true`, a fishing rod can be linked to a target block and remotly trigger a redstone signal                                  |
 
 ## Optional Features
 These features are completely optional and are disabled by default
 
 <details>
-<summary>Better fishing hook</summary>
+<summary>Better fishing hook (experimental, Fabric only)</summary>
+<b>This feature is experimental and only available on Fabric (not on Paper). It may change or be removed in future versions, and its config key may be renamed.</b>
+
 This feature can not be enabled through the in-game config commands.
 
 <b>This feature can be used not only for stasis chambers but also for any other Redstone contraption, which may be game-breaking for some players</b>
 
-If <code>EnableBetterFishingHookFeature</code> is set to <code>true</code> in the configuration file, a fishing rod can be used on a target block. 
+If <code>ExperimentalEnableBetterFishingHookFeature</code> is set to <code>true</code> in the configuration file, a fishing rod can be used on a target block. 
 
 This fishing rod is then *linked* to the target block. This is indicated by the target block's position being listed in the fishing rod's lore.
 

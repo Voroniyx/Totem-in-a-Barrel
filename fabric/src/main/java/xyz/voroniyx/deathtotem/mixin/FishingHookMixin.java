@@ -30,7 +30,7 @@ import java.util.List;
 public class FishingHookMixin {
     @Inject(method = "onHitBlock", at = @At("TAIL"))
     private void onTargetBlockHit(BlockHitResult hitResult, CallbackInfo ci) {
-        if (!DeathTotemMod.CONFIG.getData().EnableBetterFishingHookFeature) {
+        if (!DeathTotemMod.CONFIG.getData().ExperimentalEnableBetterFishingHookFeature) {
             return;
         }
 
@@ -54,7 +54,7 @@ public class FishingHookMixin {
 
     @Inject(method = "retrieve", at = @At("HEAD"))
     private void onReelIn(ItemStack rod, CallbackInfoReturnable<Integer> cir) {
-        if (!DeathTotemMod.CONFIG.getData().EnableBetterFishingHookFeature) {
+        if (!DeathTotemMod.CONFIG.getData().ExperimentalEnableBetterFishingHookFeature) {
             return;
         }
 
